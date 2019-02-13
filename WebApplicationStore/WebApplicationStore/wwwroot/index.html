@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $.get("http://localhost:65001/api/data")
+                .done(function (a, b, c) {
+                    console.log(a);
+
+
+                    var data = a;
+
+
+                    for (var i = 0; i < data.length; i++) {
+
+                        var html = '<a href="' + data[i].url + '"class="list-group-item active">' + data[i].text + ' item</a>';
+                        $('#list').append(html);
+                    }
+                });
+        });
+        /*********************************************************
+         * $()      : Jquery 함수이다를 나타냄. $ 문구가 나오면 => Jquery
+         * document : <!DOCTYPE html> = Web문서를 나타냄. == target
+         * ready()  : 타켓이 준비가 완료 되었다면 실행되는 함수.
+          => &(document).ready Web브라우저가 모두 출력된후
+          function(){} : callback 함수 (이름없는 화면) {이벤트 내용 적용}
+         *********************************************************/
+    </script>
+
+</head>
+<body>
+
+    <div class="container">
+        <h2>Active Item in a List Group</h2>
+        <div class="list-group" id="list">
+
+            <!--
+                <a href="#" class="list-group-item active">First item</a>
+                <a href="#" class="list-group-item">Second item</a>
+                <a href="#" class="list-group-item">Third item</a>
+            -->
+        </div>
+    </div>
+    <script>
+        console.log("끝부분");
+    </script>
+</body>
+</html>
