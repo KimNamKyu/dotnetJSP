@@ -9,13 +9,11 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <script>
         $(document).ready(function () {
-            $.get("http://localhost:65001/api/data")
+            $.get("http://gdc3.gudi.kr:21001/api/data")
                 .done(function (a, b, c) {
                     console.log(a);
 
-
                     var data = a;
-
 
                     for (var i = 0; i < data.length; i++) {
 
