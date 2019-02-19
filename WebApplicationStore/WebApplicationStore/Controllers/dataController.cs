@@ -75,7 +75,6 @@ namespace WebApplicationStore.Controllers
                 while (sdr.Read())
                 {
                     tot = Convert.ToInt32(sdr.GetValue(0));
-                    Console.WriteLine(tot);
                 }
                 sdr.Close();
 
@@ -103,7 +102,7 @@ namespace WebApplicationStore.Controllers
                 Console.WriteLine("connection fail");
             }
 
-            resultMap.Add("top",tot);
+            resultMap.Add("tot",tot);
             resultMap.Add("rows", resultList);
             return resultMap;
         }

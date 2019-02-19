@@ -1,0 +1,156 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>애플리케이션 배포</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script>
+      // CallBack()콜백함수 정의 == winform 의 Load += :: 되는 것과 같은 의미!
+      function ready()
+      {
+          var page = 0;
+        $("#form").submit(submint);
+          Select();
+
+        function submint(e)
+        {
+            e.preventDefault(); //검색 되지않도록 막아줌 (form 기능을 막음)
+            //alert("확인");
+
+            // 화면 쪽에서 막는 방법!
+            var name = $("#name").val();
+            if(name == "")
+                {
+                    $("tbody").empty();
+                    return false;
+                }
+
+            /********
+            $.post("http://localhost:65001/api/test", {name :$("#name").val()}).done(createHtml);
+            *********/
+             $.get("http://localhost:65001/api/test",{name:$("#name").val(), page:page})
+            .done(function(a,b,c){
+                  createHtml(a.rows);
+                  paging(a.tot);
+                  });
+
+        }
+
+        function Select()
+        {
+             $.get("http://localhost:65001/api/test",{name:$("#name").val(), page:page})
+            .done(function(a,b,c){
+                  createHtml(a.rows);
+                  paging(a.tot);
+                  });
+        }
+
+
+
+        function createHtml(data,b,c)
+        {
+            $("tbody").empty();
+             for(var i = 0; i < data.length; i++)
+            {
+                var html =  "    <tr class = 'tr'>" +
+                            "    <td>" + data[i].fNo +"</td>" +
+                            "    <td>" + data[i].fName +"</td>" +
+                            "    <td>" + data[i].dt +"</td>" +
+                            "</tr>";
+              $("tbody").append(html);
+            }
+
+            //자기자신을 확인
+            $("tbody tr").click(function(){
+                var index = $("tbody tr").index(this);
+                var url = data[index].url;
+                console.log(url);
+                //document.location.href = "http://192.168.3.52/" + url; //Get방식의 통신방식
+
+                var a = document.createElement("A"); // a태그 객체 생성
+                a.href = "http://192.168.3.52/" + url;
+                console.log(a);
+                a.target = "_blank";
+                a.download = data[index].fName;
+                //document.getElementById("pager").innerHTML = a;
+                a.click();
+            });
+        }
+
+        function paging(data,b,c)
+        {
+            $("#pager").empty();
+            for(var i = 0; i< (data / 5); i++)
+            {
+                var html = '<li><a href="#">' + (i + 1) + '</a></li>';
+                $("#pager").append(html);
+            }
+
+            $("#pager a").click(function(){
+                var no = $(this).text();
+                console.log(this, no);
+                page = ( 5 * no ) - 5;
+
+               Select();
+            })
+
+        }
+
+
+    }
+      $(document).ready(ready); //화면에 보여지는 전체(타켓) .준비된후 실행된다.
+    </script>
+    <style>
+        .li {
+            border: 1px solid green;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            margin: 0 10px;
+            display: inline-block !important;
+        }
+
+            .li:hover {
+                background-color: aqua;
+                cursor: pointer;
+            }
+
+        .tr:hover {
+            background-color: yellow;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <div style="text-align: center; margin-top: 20px; margin-bottom: 20px;">
+            <form id="form" onsubmin="return false;">
+                <input type="text" name="name" id="name" placeholder="검색 할 파일명을 입력하기."
+                       style="width: 40%;">
+                <input type="submit" value="검색">
+            </form>
+        </div>
+
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>파일명</th>
+                    <th>날짜</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <ul class="pager" id="pager"></ul>
+
+
+    </div>
+
+</body>
+</html>
